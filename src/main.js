@@ -3,7 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VueResource from 'vue-resource'
 
+import './common/styless/index.less'
+// import './common/styless/index.styl'
+Vue.use(VueResource)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
@@ -13,3 +17,6 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+router.push('/goods')
+// router.push('/home')
