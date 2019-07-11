@@ -98,9 +98,9 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>//stylus less
-// @import '../../common/styless/mixin.less';
-// @import './header.less';
-@import '../../common/styless/mixin.styl';
-@import './header.styl';
+<style lang="less" scoped>//stylus less
+@import '../../common/styless/mixin.less';
+@import './header.less';
+// @import '../../common/styless/mixin.styl';
+// @import './header.styl';
 </style>
