@@ -18,8 +18,14 @@
       </div>
     </div>
     <!-- <transition name="drop"> -->
-      <div class="ball-container" v-for="(ball, index) in balls" :key="index" v-show="ball.show">
-        <div class="inner"></div>
+      <div class="ball-container">
+        <div v-for="(ball, index) in balls" :key="index">
+          <transition>
+            <div class="ball" v-show="ball.show">
+              <div class="inner"></div>
+            </div>
+          </transition>
+        </div>
       </div>
     <!-- </transition> -->
   </div>
