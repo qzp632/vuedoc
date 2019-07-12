@@ -26,6 +26,9 @@
                     <div class="price">
                       <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                     </div>
+                    <div class="cartcontrol-wrapper">
+                      <cartcontrol @shopCartClick="shopCartClick" :food="food"></cartcontrol>
+                    </div>
                   </div>
                 </div>
               </li>
@@ -33,10 +36,13 @@
           </li>
         </ul>
       </div>
+      <shopcart ref="dropEl" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
   </div>
 </template>
 <script>
 import BScroll from 'better-scroll'
+import shopcart from 'components/shopcart/shopcart'
+import cartcontrol from 'components/cartcontrol/cartcontrol'
 const ERR_OK = 0
 export default {
   name: 'goods',
@@ -62,6 +68,17 @@ export default {
         }
       }
       return 0
+    },
+    selectFoods () {
+      let foods = []
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            foods.push(food)
+          }
+        })
+      })
+      return foods
     }
   },
   created () {
@@ -83,6 +100,7 @@ export default {
         click: true
       })
       this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+        click: true,
         probeType: 3
       })
       this.foodsScroll.on('scroll', (pos) => {
@@ -106,13 +124,20 @@ export default {
       let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')
       let el = foodList[index]
       this.foodsScroll.scrollToElement(el, 300)
+    },
+    shopCartClick (target) {
+      this.$refs.dropEl.drop(target)
     }
+  },
+  components: {
+    shopcart,
+    cartcontrol
   }
 }
 </script>
-<style lang="stylus" scoped>//stylus less
-// @import '../../common/styless/mixin.less';
-// @import './goods.less';
-@import '../../common/styless/mixin.styl';
-@import './goods.styl';
+<style lang="less" scoped>//stylus less
+@import '../../common/styless/mixin.less';
+@import './goods.less';
+// @import '../../common/styless/mixin.styl';
+// @import './goods.styl';
 </style>
