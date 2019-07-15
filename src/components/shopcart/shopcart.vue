@@ -1,6 +1,7 @@
 <template>
+<div>
   <div class="shopcart">
-    <div class="content">
+    <div class="content" @click="toggleList">
       <div class="content-left">
         <div class="logo-wrapper">
           <div class="logo" :class="{'highlight': totalCount > 0}">
@@ -17,20 +18,36 @@
         </div>
       </div>
     </div>
-    <!-- <transition name="drop"> -->
-      <div class="ball-container">
-        <div v-for="(ball, index) in balls" :key="index">
-          <transition>
-            <div class="ball" v-show="ball.show">
-              <div class="inner"></div>
-            </div>
-          </transition>
+    <transition name="fold">
+      <div class="shopcart-list" v-show="fold">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty" @click="empty">清空</span>
+        </div>
+        <div class="list-content" ref="listContent">
+          <ul>
+            <li class="food" v-for="(food, index) in selectFoods" :key="index">
+              <span class="name">{{food.name}}</span>
+              <div class="price">
+                <span>￥{{food.price*food.count}}</span>
+              </div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol :food="food"></cartcontrol>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
-    <!-- </transition> -->
+    </transition>
   </div>
+  <transition name="fade">
+    <div class="list-mask" v-show="fold"></div>
+  </transition>
+</div>
 </template>
 <script>
+import BScroll from 'better-scroll'
+import cartcontrol from 'components/cartcontrol/cartcontrol'
 export default {
   props: {
     selectFoods: {
@@ -67,7 +84,8 @@ export default {
           show: false
         }
       ],
-      dropBalls: []
+      dropBalls: [],
+      fold: false
     }
   },
   computed: {
@@ -112,6 +130,42 @@ export default {
           ball.el = el
           this.dropBalls.push(ball)
           return
+        }
+      }
+    },
+    toggleList () {
+      if (!this.totalCount) {
+        return
+      }
+      this.fold = !this.fold
+    },
+    empty () {
+      this.selectFoods.forEach((food) => {
+        food.count = 0
+      })
+    }
+  },
+  components: {
+    cartcontrol
+  },
+  watch: {
+    totalCount: function () {
+      if (!this.totalCount) {
+        this.fold = false
+      }
+    },
+    fold: function () {
+      if (this.totalCount) {
+        if (this.fold) {
+          this.$nextTick(() => {
+            if (!this.scroll) {
+              this.scroll = new BScroll(this.$refs.listContent, {
+                click: true
+              })
+            } else {
+              this.scroll.refresh()
+            }
+          })
         }
       }
     }
