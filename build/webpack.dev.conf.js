@@ -23,10 +23,41 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   },
   // cheap-module-eval-source-map is faster for development
   devtool: config.dev.devtool,
-
+  // http://localhost:5000/api/list
   // these devServer options should be customized in /config/index.js
   devServer: {
     before(app) {
+      app.get('/api/list', function(req, res) {
+        res.json({
+          errno: 0,
+          data: [
+            {
+                name: 'Blank',
+                mun: 12
+            },
+            {
+                name: 'N/A',
+                mun: 10
+            },
+            {
+                name: 'C',
+                mun: 101
+            },
+            {
+                name: 'G',
+                mun: 42
+            },
+            {
+                name: 'A',
+                mun: 20
+            },
+            {
+                name: 'R',
+                mun: 10
+            }
+        ]
+        })
+      });
       app.get('/api/seller', function(req, res) {
         res.json({
           errno: 0,
