@@ -28,7 +28,7 @@
           <ratingselect @onSelect="onSelect" @onToggle="onToggle" :selectType="selectType" :onlyContent="onlyContent" :ratings="ratings"></ratingselect>
           <div class="rating-wrapper">
             <ul>
-              <li v-for="(rating, index) in ratings" :key="index" class="rating-item">
+              <li v-for="(rating, index) in ratings" v-show="needShow(rating.rateType, rating.text)" :key="index" class="rating-item">
                 <div class="avatar">
                   <img width="28" height="28" :src="rating.avatar">
                 </div>
@@ -41,7 +41,7 @@
                   <p class="text">{{rating.text}}</p>
                   <div class="recommend" v-show="rating.recommend && rating.recommend.length">
                     <span class="icon-thumb_up"></span>
-                    <span v-for="(item, index) in rating.recommend" :key="index">{{item}}</span>
+                    <span class="item" v-for="(item, index) in rating.recommend" :key="index">{{item}}</span>
                   </div>
                   <div class="time">{{rating.rateTime | formatDate}}</div>
                 </div>
@@ -103,6 +103,19 @@ export default {
       this.$nextTick(() => {
         this.scroll.refresh()
       })
+    },
+    needShow (type, text) {
+      if (this.onlyContent && !text) {
+        // alert(0)
+        return false
+      }
+      if (this.selectType === ALL) {
+        // alert(1)
+        return true
+      } else {
+        // alert(2)
+        return type === this.selectType
+      }
     }
   },
   filters: {
@@ -118,9 +131,9 @@ export default {
   }
 }
 </script>
-<style lang="stylus" scoped>//stylus less
-// @import '../../common/styless/mixin.less';
-// @import './ratings.less';
-@import '../../common/styless/mixin.styl';
-@import './ratings.styl';
+<style lang="less" scoped>//stylus less
+@import '../../common/styless/mixin.less';
+@import './ratings.less';
+// @import '../../common/styless/mixin.styl';
+// @import './ratings.styl';
 </style>
